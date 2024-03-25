@@ -1,45 +1,25 @@
 <?php
-require_once 'db.php';
-require_once 'functions.php';
+require_once 'header.php'; // Ensure the header is included at the start
 
-// Fetch all categories from the database
-$stmt = $pdo->prepare("SELECT * FROM Categories ORDER BY name ASC");
-$stmt->execute();
+// Your existing PHP code for fetching categories or any initializations here
+require_once 'db.php'; // Assuming 'db.php' connects to your database
+
+$stmt = $pdo->query("SELECT id, name, description FROM categories ORDER BY name ASC");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Wayne State University Forum</title>
-    <link rel="stylesheet" href="style.css"> <!-- Make sure to create this CSS file -->
-</head>
-<body>
-<header>
-    <h1>Welcome to Wayne State University Forum</h1>
-    <nav>
-        <ul>
-            <li><a href="index.php">Home</a></li>
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <li><a href="profile.php">Profile</a></li>
-                <li><a href="logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="login.php">Login</a></li>
-                <li><a href="register.php">Register</a></li>
-            <?php endif; ?>
-        </ul>
-    </nav>
-</header>
-<main>
-    <section>
-        <h2>Categories</h2>
-        <ul>
-            <?php foreach ($categories as $category): ?>
-                <li><a href="category.php?id=<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></li>
-            <?php endforeach; ?>
-        </ul>
-    </section>
-</main>
-</body>
-</html>
+<div class="main-content">
+    <h2>Welcome to the Wayne State University Forum</h2>
+    <p>Browse the categories below to participate in discussions:</p>
+    <div class="categories">
+        <?php foreach ($categories as $category): ?>
+            <div class="category">
+                <h3><a href="category.php?id=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a></h3>
+                <p><?= nl2br(htmlspecialchars($category['description'])) ?></p>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<?php
+require_once 'footer.php'; // Ensure the footer is included at the end

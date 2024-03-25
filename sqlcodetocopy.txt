@@ -1,0 +1,74 @@
+CREATE DATABASE IF NOT EXISTS id21638583_forum;
+
+USE id21638583_forum;
+
+-- Users Table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Categories Table
+CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Posts Table
+CREATE TABLE IF NOT EXISTS posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    category_id INT,
+    user_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Comments Table
+CREATE TABLE IF NOT EXISTS comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    post_id INT,
+    user_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+
+populating tables:
+
+INSERT INTO categories (name, description) VALUES
+('Computer Science', 'Discussions related to computer science topics, programming, algorithms, and more.'),
+('Information Technology', 'For topics on IT, networking, security, and IT management.'),
+('Business', 'A place to discuss business-related subjects, economics, marketing, entrepreneurship, etc.'),
+('Engineering', 'Engineering discussions, including but not limited to mechanical, electrical, and civil engineering.'),
+('Health Sciences', 'Discussions on health sciences, medicine, nursing, and related fields.'),
+('Liberal Arts', 'For topics in literature, philosophy, history, and other liberal arts.'),
+('Mathematics', 'A place to talk about mathematical concepts, problems, and more.'),
+('Physical Sciences', 'Discussions on physics, chemistry, earth science, and related topics.');
+
+INSERT INTO users (username, password) VALUES
+('johndoe', 'password123'),
+('janedoe', 'password456'),
+('techenthusiast', 'password789');
+
+
+INSERT INTO posts (title, content, category_id, user_id) VALUES
+('Welcome to the Computer Science Forum!', 'This is the first post in the Computer Science category. Feel free to share resources, ask questions, and discuss topics related to computer science.', 1, 1),
+('IT Career Paths', 'What career paths are available in Information Technology? Let\'s discuss the options and what skills are needed.', 2, 2),
+('Starting a Business', 'What does it take to start a successful business today? Share your thoughts and experiences.', 3, 3);
+
+
+INSERT INTO comments (content, post_id, user_id) VALUES
+('Really excited to be a part of this community!', 1, 2),
+('Cybersecurity is a fascinating field with lots of growth potential.', 2, 1),
+('Entrepreneurship requires resilience and creativity. Looking forward to more insights.', 3, 2),
+('Networking skills are crucial for IT professionals.', 2, 3);
